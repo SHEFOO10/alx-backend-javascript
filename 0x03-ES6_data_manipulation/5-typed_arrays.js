@@ -3,6 +3,8 @@ export default function createInt8TypedArray(length, position, value) {
   const array8bit = new Int8Array(arrayBuffer);
   if (position < array8bit.length) {
     array8bit[position] = value;
+  } else {
+    console.log('Position outside range');
   }
   return arrayBuffer;
 }
