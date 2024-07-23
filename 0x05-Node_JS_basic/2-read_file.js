@@ -42,7 +42,7 @@ function countStudents(filePath) {
       console.log(`Number of students in ${field}: ${fieldCounts[field]}. List: ${names}`);
     });
   } catch (error) {
-    console.error('Cannot load the database');
+    throw new Error('Cannot load the database');
   }
 }
 
