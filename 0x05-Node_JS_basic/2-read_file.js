@@ -47,5 +47,4 @@ function countStudents(filePath) {
   }
 }
 
-const filePath = path.join(__dirname, 'database.csv');
-countStudents(filePath);
+module.exports = countStudents;
