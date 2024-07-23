@@ -1,20 +1,24 @@
 const http = require('http');
 const fs = require('fs');
 
-if (process.argv.length < 3) {
-  console.error('You must send path to database file');
-  process.exit(1);
-}
+const DB_FILE = process.argv.length > 2 ? process.argv[2] : '';
 
-const app = http.createServer((request, response) => {
-  if (request.url === '/students') {
-    response.write('This is the list of our students\n');
-    fs.readFile(process.argv[2], 'utf8', (err, data) => {
-      if (err) throw new Error('Cannot load the database');
+function countStudents(filePath) {
+  return new Promise((resolve, reject) => {
+    fs.readFile(filePath, 'utf8', (err, data) => {
+      const responseText = [];
+      if (err) {
+        responseText.push('Cannot load the database');
+        reject(responseText);
+        return;
+      }
+
       const lines = data.split('\n').filter((line) => line.trim() !== '');
       const headdings = lines[0].split(',');
       const students = lines.slice(1).map((line) => line.split(','));
-      response.write(`Number of students: ${students.length}\n`);
+
+      responseText.push(`Number of students: ${students.length}`);
+
       const fieldCounts = {};
       const fieldNames = {};
       students.forEach((student) => {
@@ -27,9 +31,24 @@ const app = http.createServer((request, response) => {
         fieldCounts[field] += 1;
         fieldNames[field].push(student[0]);
       });
+
       Object.keys(fieldCounts).forEach((field) => {
-        response.write(`Number of students in ${field}: ${fieldCounts[field]}. List: ${fieldNames[field].join(', ')}\n`);
+        responseText.push(`Number of students in ${field}: ${fieldCounts[field]}. List: ${fieldNames[field].join(', ')}`);
       });
+
+      resolve(responseText);
+    });
+  });
+}
+
+const app = http.createServer((request, response) => {
+  if (request.url === '/students') {
+    response.write('This is the list of our students\n');
+    countStudents(DB_FILE).then((responseData) => {
+      response.write(responseData.join('\n'));
+      response.end();
+    }).catch((err) => {
+      response.write(err.join('\n'));
       response.end();
     });
   } else if (request.url === '/') {
