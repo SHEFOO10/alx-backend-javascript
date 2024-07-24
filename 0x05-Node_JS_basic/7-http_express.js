@@ -20,7 +20,7 @@ function countStudents(filePath) {
       const headdings = lines[0].split(',');
       const students = lines.slice(1).map((line) => line.split(','));
 
-      console.log(`Number of students: ${students.length}`);
+      process.stdout.write(`Number of students: ${students.length}`);
 
       const fieldCounts = {};
       const fieldNames = {};
@@ -36,7 +36,7 @@ function countStudents(filePath) {
       });
 
       Object.keys(fieldCounts).forEach((field) => {
-        console.log(`Number of students in ${field}: ${fieldCounts[field]}. List: ${fieldNames[field].join(', ')}`);
+        process.stdout.write(`Number of students in ${field}: ${fieldCounts[field]}. List: ${fieldNames[field].join(', ')}`);
       });
 
       resolve();
@@ -52,8 +52,7 @@ app.get('/', (req, res) => {
 
 const output = [];
 app.get('/students', (req, res) => {
-  output.unshift('This is the list of our students\n');
-  res.send(output.join(''));
+  res.send(`This is the list of our students\n${output.join('\n')}`);
 });
 
 app.listen(1245);
