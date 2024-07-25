@@ -18,11 +18,13 @@ describe('sendPaymentRequestToApi', () => {
 
     // Verify that log was called with the correct message
     expect(logSpy.calledWith('The total is: 120')).to.be.true;
+    expect(logSpy.calledOnce).to.be.true;
   });
   it('should call calculateNumber with "SUM", 10, and 10', () => {
 	  // Call the function to test
 	  const result = sendPaymentRequestToApi(10, 10);
 	  // Verify that log was called with the correct message
 	  expect(logSpy.calledWith('The total is: 20')).to.be.true;
+	  expect(logSpy.calledOnce).to.be.true;
   });
 });
