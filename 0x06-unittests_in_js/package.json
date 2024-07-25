@@ -1,8 +1,12 @@
 {
   "dependencies": {
+    "chai": "^4.5.0",
     "mocha": "^10.7.0"
   },
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha"
+    "test": "mocha"
+  },
+  "devDependencies": {
+    "sinon": "^18.0.0"
   }
 }
