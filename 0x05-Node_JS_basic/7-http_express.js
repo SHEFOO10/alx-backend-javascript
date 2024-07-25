@@ -52,8 +52,7 @@ app.get('/', (req, res) => {
 
 const output = [];
 app.get('/students', (req, res) => {
-  res.write(`This is the list of our students\n${output.join('\n')}`);
-  res.end()
+  res.send(`This is the list of our students\n${output.join('\n')}`);
 });
 
 app.listen(1245);
