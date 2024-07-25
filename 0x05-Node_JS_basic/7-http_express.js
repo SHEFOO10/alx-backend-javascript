@@ -47,14 +47,12 @@ app.get('/', (req, res) => {
   res.send('Hello Holberton School!');
 });
 
-
 app.get('/students', (_, res) => {
   const responseParts = ['This is the list of our students'];
 
   countStudents(DB_FILE)
     .then((report) => {
       responseParts.push(...report);
-      console.log(responseParts)
       const responseText = responseParts.join('\n');
       res.setHeader('Content-Type', 'text/plain');
       res.setHeader('Content-Length', responseText.length);
