@@ -6,21 +6,18 @@ const DB_FILE = process.argv.length > 2 ? process.argv[2] : '';
 function countStudents(filePath) {
   return new Promise((resolve, reject) => {
     fs.readFile(filePath, 'utf8', (err, data) => {
+      const responseText = [];
       if (err) {
-        reject(new Error('Cannot load the database'));
+        responseText.push('Cannot load the database');
+        reject(responseText);
         return;
       }
 
       const lines = data.split('\n').filter((line) => line.trim() !== '');
-      if (lines.length === 0) {
-        reject(new Error('Cannot load the database'));
-        return;
-      }
-
       const headdings = lines[0].split(',');
       const students = lines.slice(1).map((line) => line.split(','));
 
-      process.stdout.write(`Number of students: ${students.length}`);
+      responseText.push(`Number of students: ${students.length}`);
 
       const fieldCounts = {};
       const fieldNames = {};
@@ -36,10 +33,10 @@ function countStudents(filePath) {
       });
 
       Object.keys(fieldCounts).forEach((field) => {
-        process.stdout.write(`Number of students in ${field}: ${fieldCounts[field]}. List: ${fieldNames[field].join(', ')}`);
+        responseText.push(`Number of students in ${field}: ${fieldCounts[field]}. List: ${fieldNames[field].join(', ')}`);
       });
 
-      resolve();
+      resolve(responseText);
     });
   });
 }
@@ -50,22 +47,41 @@ app.get('/', (req, res) => {
   res.send('Hello Holberton School!');
 });
 
-const output = [];
-app.get('/students', (req, res) => {
-  res.send(`This is the list of our students\n${output.join('\n')}`);
+
+app.get('/students', (_, res) => {
+  const responseParts = ['This is the list of our students'];
+
+  countStudents(DB_FILE)
+    .then((report) => {
+      responseParts.push(...report);
+      console.log(responseParts)
+      const responseText = responseParts.join('\n');
+      res.setHeader('Content-Type', 'text/plain');
+      res.setHeader('Content-Length', responseText.length);
+      res.statusCode = 200;
+      res.write(Buffer.from(responseText));
+    })
+    .catch((err) => {
+      responseParts.push(err instanceof Error ? err.message : err.toString());
+      const responseText = responseParts.join('\n');
+      res.setHeader('Content-Type', 'text/plain');
+      res.setHeader('Content-Length', responseText.length);
+      res.statusCode = 200;
+      res.write(Buffer.from(responseText));
+    });
 });
 
 app.listen(1245);
-const originalstdoutWrite = process.stdout.write;
+// const originalstdoutWrite = process.stdout.write;
 
-process.stdout.write = (data) => {
-  output.push(data);
-};
-countStudents(DB_FILE).then(() => {
-  process.stdout.write = originalstdoutWrite;
-}).catch((err) => {
-  output.push(err.message);
-  process.stdout.write = originalstdoutWrite;
-});
+// process.stdout.write = (data) => {
+//   output.push(data);
+// };
+// countStudents(DB_FILE).then(() => {
+//   process.stdout.write = originalstdoutWrite;
+// }).catch((err) => {
+//   output.push(err.message);
+//   process.stdout.write = originalstdoutWrite;
+// });
 
 module.exports = app;
