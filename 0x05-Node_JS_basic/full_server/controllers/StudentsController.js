@@ -57,7 +57,7 @@ class StudentsController {
         let responseText = '';
 
         if (Object.keys(data.fieldNames).includes(major)) {
-          const students = studentGroups[major];
+          const students = data.fieldNames[major];
           responseText = `List: ${students.join(', ')}`;
         }
         response.status(200).send(responseText);
