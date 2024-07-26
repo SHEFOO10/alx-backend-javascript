@@ -53,12 +53,12 @@ class StudentsController {
       return;
     }
     readDatabase(dataPath)
-      .then((studentGroups) => {
+      .then((data) => {
         let responseText = '';
 
-        if (Object.keys(studentGroups).includes(major)) {
-          const group = studentGroups[major];
-          responseText = `List: ${group.map((student) => student.firstname).join(', ')}`;
+        if (Object.keys(data.fieldNames).includes(major)) {
+          const students = studentGroups[major];
+          responseText = `List: ${students.join(', ')}`;
         }
         response.status(200).send(responseText);
       })
