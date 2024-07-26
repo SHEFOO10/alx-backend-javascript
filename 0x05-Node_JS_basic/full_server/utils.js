@@ -1,4 +1,4 @@
-const fs = require('fs');
+import fs from 'fs';
 
 function readDatabase(filePath) {
   return new Promise((resolve, reject) => {
@@ -28,15 +28,17 @@ function readDatabase(filePath) {
         fieldCounts[field] += 1;
         fieldNames[field].push(student[0]);
       });
-      const sortedFields = Object.keys(fieldCounts).sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
+      const sortedFields = Object.keys(fieldCounts)
+        .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
       // Build the response text
       sortedFields.forEach((field) => {
         responseText.push(`Number of students in ${field}: ${fieldCounts[field]}. List: ${fieldNames[field].join(', ')}`);
       });
 
-      resolve({responseText, fieldNames});
+      resolve({ responseText, fieldNames });
     });
   });
 }
 
-export default readDatabase = readDatabase;
+export default readDatabase;
+module.exports = readDatabase;

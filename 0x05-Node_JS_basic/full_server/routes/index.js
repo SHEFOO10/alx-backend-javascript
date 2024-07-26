@@ -1,11 +1,11 @@
-import express from 'express'
+import express from 'express';
 
-import AppController from '../controllers/AppController'
-import StudentsController from '../controllers/StudentsController.js'
+import AppController from '../controllers/AppController';
+import StudentsController from '../controllers/StudentsController';
 
 const router = express.Router();
 
-router.get("/", function (req, res) {
+router.get('/', (req, res) => {
   AppController.getHomepage(req, res);
 });
 
@@ -17,4 +17,5 @@ router.get('/students/:major', (req, res) => {
   StudentsController.getAllStudentsByMajor(req, res);
 });
 
+export default router;
 module.exports = router;
