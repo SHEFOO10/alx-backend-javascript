@@ -2,20 +2,11 @@ const express = require('express');
 
 const app = express();
 
-const validateIdParam = (req, res, next) => {
-  const id = req.params.id;
-  if (!isNaN(parseInt(id, 10))) {
-    next();
-  } else {
-    res.status(404).send(`Cannot GET /cart/${id}`);
-  }
-};
-
 app.get('/', (req, res) => {
   res.send('Welcome to the payment system');
 });
 
-app.get('/cart/:id', validateIdParam, (req, res) => {
+app.get('/cart/:id([0-9]+)', (req, res) => {
   res.send(`Payment methods for cart ${req.params.id}`);
 });
 
