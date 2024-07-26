@@ -10,8 +10,7 @@ class StudentsController {
         response.send(responseText.join('\n'));
       })
       .catch((err) => {
-	responseText.push(...err);
-	response.status(500).send(responseText.join('\n'));
+	response.status(500).send(err[0]);
       });
   }
   static getAllStudentsByMajor(request, response) {
