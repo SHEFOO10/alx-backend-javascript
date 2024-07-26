@@ -23,9 +23,7 @@ class StudentsController {
         response.send(`List: ${data.fieldNames[request.params.major].join(', ')}`);
       })
       .catch((err) => {
-        //response.status(500).send(err.join('\n'));
-        console.log(err);
-	response.end();
+        response.status(500).send(err[0]);
       });
   }
 }
